@@ -1,4 +1,4 @@
-FROM rust:1.34.2-slim-stretch AS builder
+FROM rust:1.39-slim-stretch AS builder
 RUN rustup install nightly-x86_64-unknown-linux-gnu
 
 COPY . /sources
