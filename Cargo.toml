@@ -15,7 +15,6 @@ askama = "0.8"
 lazy_static = "1.2"
 rand = { version = "0.6", features = ["nightly"] }
 gpw = "0.1"
-syntect = "3.0"
 serde_derive = "1.0"
 
 [profile.release]

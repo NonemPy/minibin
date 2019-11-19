@@ -8,15 +8,13 @@ extern crate rocket;
 
 extern crate askama;
 
-mod highlight;
 mod io;
 mod params;
 
-use highlight::highlight;
 use io::{generate_id, get_paste, store_paste};
-use params::{HostHeader, IsPlaintextRequest};
+use params::HostHeader;
 
-use askama::{Html as AskamaHtml, MarkupDisplay, Template};
+use askama::Template;
 
 use rocket::http::{ContentType, Status};
 use rocket::request::Form;
@@ -24,7 +22,6 @@ use rocket::response::content::{Content, Html};
 use rocket::response::Redirect;
 use rocket::Data;
 
-use std::borrow::Cow;
 use std::io::Read;
 
 ///
@@ -80,39 +77,17 @@ fn submit_raw(input: Data, host: HostHeader) -> std::io::Result<String> {
 /// Show paste page
 ///
 
-#[derive(Template)]
-#[template(path = "paste.html")]
-struct ShowPaste<'a> {
-    content: MarkupDisplay<AskamaHtml, Cow<'a, String>>,
-}
-
 #[get("/<key>")]
-fn show_paste(key: String, plaintext: IsPlaintextRequest) -> Result<Content<String>, Status> {
+fn show_paste(key: String) -> Result<Content<String>, Status> {
     let mut splitter = key.splitn(2, '.');
     let key = splitter.next().ok_or_else(|| Status::NotFound)?;
-    let ext = splitter.next();
+    let _ext = splitter.next();
 
     // get() returns a read-only lock, we're not going to be writing to this key
     // again so we can hold this for as long as we want
     let entry = &*get_paste(key).ok_or_else(|| Status::NotFound)?;
 
-    if *plaintext {
-        Ok(Content(ContentType::Plain, entry.to_string()))
-    } else {
-        let content = match ext {
-            Some(extension) => match highlight(&entry, extension) {
-                Some(html) => MarkupDisplay::new_safe(Cow::Owned(html), AskamaHtml),
-                None => return Err(Status::NotFound),
-            },
-            None => MarkupDisplay::new_unsafe(Cow::Borrowed(entry), AskamaHtml),
-        };
-
-        let template = ShowPaste { content };
-        match template.render() {
-            Ok(html) => Ok(Content(ContentType::HTML, html)),
-            Err(_) => Err(Status::InternalServerError),
-        }
-    }
+    Ok(Content(ContentType::Plain, entry.to_string()))
 }
 
 fn main() {
