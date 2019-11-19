@@ -13,14 +13,18 @@ A minimal pastebin.
 
 ### Quickstart
 
-Install `docker` and `docker-compose`, then adapt `docker-compose.yml` to your liking and:
+- Make sure you have `docker` and `docker-compose`
+- Clone this repository somewhere and `cd` to it
+- Optionally, adapt `docker-compose.yml` to your liking
+
+Then run:
 
 ```sh
 $ docker-compose build
 $ docker-compose up -d
 ```
 
-Should be accessible at <http://127.0.0.1:8000>.
+Should now be accessible on `http://0.0.0.0:8000`.
 
 ### Build manually
 
