@@ -87,8 +87,20 @@ fn show_paste(key: String) -> Result<Content<String>, Status> {
     Ok(Content(ContentType::Plain, entry.to_string()))
 }
 
+
+/// Route: 404 Not Found
+///
+/// Empty response for 404 errors
+
+#[catch(404)]
+fn not_found() -> &'static str {
+    ""
+}
+
+
 fn main() {
     rocket::ignite()
         .mount("/", routes![index, submit, submit_raw, show_paste])
+        .register(catchers![not_found])
         .launch();
 }
