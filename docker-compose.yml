@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  minibin:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - ROCKET_PORT=8000
+      - PASTEBIN_MAX_PASTES=1000
