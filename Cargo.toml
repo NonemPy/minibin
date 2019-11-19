@@ -1,11 +1,12 @@
 [package]
-name = "bin"
-version = "1.0.2"
-description = "a paste bin."
-repository = "https://github.com/w4/bin"
-license = "WTFPL OR 0BSD"
-authors = ["Jordan Doyle <jordan@doyle.la>"]
+name = "minibin"
+version = "0.0.1"
+description = "A minimal pastebin"
+repository = "https://github.com/tylerlm/minibin"
+license = "WTFPL or 0BSD"
+authors = ["Jordan Doyle <jordan@doyle.la>", "Tyler Morgan"]
 edition = "2018"
+publish = false
 
 [dependencies]
 owning_ref = "0.4"
@@ -21,9 +22,5 @@ serde_derive = "1.0"
 lto = true
 codegen-units = 1
 incremental = false
-
-[badges]
-travis-ci = { repository = "w4/bin" }
-is-it-maintained-issue-resolution = { repository = "w4/bin" }
-is-it-maintained-open-issues = { repository = "w4/bin" }
-maintenance = { status = "passively-maintained" }
+overflow-checks = true
+opt-level = 3

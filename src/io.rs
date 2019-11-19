@@ -16,15 +16,15 @@ use std::sync::{PoisonError, RwLock};
 
 lazy_static! {
     static ref ENTRIES: RwLock<LinkedHashMap<String, String>> = RwLock::new(LinkedHashMap::new());
-    static ref BUFFER_SIZE: usize = env::var("BIN_BUFFER_SIZE")
+    static ref BUFFER_SIZE: usize = env::var("PASTEBIN_MAX_PASTES")
         .map(|f| f
             .parse::<usize>()
-            .expect("Failed to parse value of BIN_BUFFER_SIZE"))
+            .expect("Failed to parse value of PASTEBIN_MAX_PASTES"))
         .unwrap_or(1000usize);
 }
 
-/// Ensures `ENTRIES` is less than the size of `BIN_BUFFER_SIZE`. If it isn't then
-/// `ENTRIES.len() - BIN_BUFFER_SIZE` elements will be popped off the front of the map.
+/// Ensures `ENTRIES` is less than the size of `PASTEBIN_MAX_PASTES`. If it isn't then
+/// `ENTRIES.len() - PASTEBIN_MAX_PASTES` elements will be popped off the front of the map.
 ///
 /// During the purge, `ENTRIES` is locked and the current thread will block.
 fn purge_old() {

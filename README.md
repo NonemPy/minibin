@@ -1,47 +1,67 @@
-# bin
-a paste bin.
+# minibin
 
-A paste bin that's actually minimalist. No database requirement, no commenting functionality, no self-destructing or time bomb messages and no social media integration—just an application to quickly send snippits of text to people.
+A minimal pastebin.
 
-[bin](https://bin.doyle.la/) is written in Rust in around 200 lines of code. It's fast, it's simple, there's code highlighting and you can ⌘+A without going to the 'plain' page. It's revolutionary in the paste bin industry, disrupting markets and pushing boundaries never seen before.
+**minibin** is a slightly-tweaked fork of [bin](https://github.com/w4/bin) by [Jordan Doyle](https://github.com/w4) with syntax highlighting removed to make it *even more* minimal.
 
-##### so how do you get bin?
+## Features
 
-Download the latest version from the [releases](https://github.com/w4/bin/releases) page, extract it and run the `./bin` executable. You can also compile it from source using Cargo if you swing that way:
+1. In-memory, no database.
+2. Create and view pastes from the browser or the command line.
 
-```bash
-# nix-shell provides an environment with rust/cargo installed
-$ nix-shell
+## Install
 
-[nix-shell:~/Code/bin]$ cargo build --release
-   Compiling bin v1.0.0 (/Users/jordanjd/Code/bin)
-    Finished release [optimized] target(s) in 3.61s
+### Quickstart
 
-[nix-shell:~/Code/bin]$ ./target/release/bin
-    ...
+Install `docker` and `docker-compose`, then adapt `docker-compose.yml` to your liking and:
+
+```sh
+$ docker-compose build
+$ docker-compose up -d
 ```
 
-##### how do you run it?
+Should be accessible at <http://127.0.0.1:8000>.
 
-```bash
-$ ./bin
+### Build manually
+
+Install [rustup](https://rustup.rs/), then:
+
+```sh
+$ git clone https://github.com/tylerlm/minibin.git
+$ cd minibin
+$ cargo +nightly build --release
+   Compiling minibin v0.0.1 (/home/user/code/minibin)
+    Finished release [optimized] target(s) in 5.55s
 ```
 
-##### funny, what settings are there?
+Find the resulting binary at `./target/release/minibin` -- just run it.
 
-bin uses [rocket](https://rocket.rs) so you can add a [rocket config file](https://api.rocket.rs/v0.3/rocket/config/) if you like. You can set `ROCKET_PORT` in your environment if you want to change the default port (8820).
+## Settings
 
-bin's only configuration value is `BIN_BUFFER_SIZE` which defaults to 2000. Change this value if you want your bin to hold more pastes.
+**minibin** uses [rocket](https://rocket.rs) so you can add a [rocket config file](https://api.rocket.rs/v0.3/rocket/config/) if you like.
 
-##### is there curl support?
+### Environment variables
 
-```bash
-$ curl -X PUT --data 'hello world' bin.doyle.la
-https://bin.doyle.la/cateettary
-$ curl https://bin.doyle.la/cateettary
-hello world
+- `ROCKET_PORT`: change the default port (default: 8000)
+- `PASTEBIN_MAX_PASTES`: how many pastes to keep (default: 1000)
+
+## `curl` examples
+
+```sh
+$ curl -X PUT --data 'example text' https://bin.example.com
+https://bin.example.com/abcdefghij
+
+$ echo 'example file' > file.txt
+$ curl -X PUT --data-binary @file.txt https://bin.example.com
+https://bin.example.com/klmnopqrst
+
+$ echo 'example stdin' | curl -X PUT --data-binary @- https://bin.example.com
+https://bin.example.com/uvwxyzabcd
+
+$ curl https://bin.example.com/abcdefghij
+example text
+$ curl https://bin.example.com/klmnopqrst
+example file
+$ curl https://bin.example.com/uvwxyzabcd
+example stdin
 ```
-
-##### how does syntax highlighting work?
-
-To get syntax highlighting you need to add the file extension at the end of your paste URL.

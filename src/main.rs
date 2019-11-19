@@ -24,9 +24,8 @@ use rocket::Data;
 
 use std::io::Read;
 
-///
-/// Homepage
-///
+
+/// Route: Home
 
 #[derive(Template)]
 #[template(path = "index.html")]
@@ -40,9 +39,8 @@ fn index() -> Result<Html<String>, Status> {
         .map_err(|_| Status::InternalServerError)
 }
 
-///
-/// Submit Paste
-///
+
+/// Route: Submit paste
 
 #[derive(FromForm)]
 struct IndexForm {
@@ -73,9 +71,8 @@ fn submit_raw(input: Data, host: HostHeader) -> std::io::Result<String> {
     }
 }
 
-///
-/// Show paste page
-///
+
+/// Route: Show paste
 
 #[get("/<key>")]
 fn show_paste(key: String) -> Result<Content<String>, Status> {
